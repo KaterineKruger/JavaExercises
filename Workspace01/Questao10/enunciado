@@ -1,0 +1,107 @@
+Jogo da velha.
+
+Regras:
+- O tabuleiro é uma matriz de três linhas por três colunas.
+- Os jogos são disputados sempre por dois jogadores, um com o símbolo X e outro com o símbolo O.
+- O objetivo é conseguir três círculos ou três xis em linha, quer horizontal, vertical ou diagonal, 
+  e ao mesmo tempo, quando possível, impedir o adversário de ganhar na próxima jogada.
+
+Criar uma classe JogoVelha que implemente a interface IJogoVelha que por sua vez possui apenas 
+um método verificaGanhador() que retorna quem ganhou um jogo da velha, se X ou O. Para isso o mesmo método
+recebe uma matriz de caracteres de tamanho 3 x 3 (char[3][3]). A interface abaixo:
+
+public interface IJogoVelha {	
+	char verificaGanhador(char[][] tabuleiro) throws Exception;	
+}	
+
+Observações:
+- Os únicos caracteres que podem compor a matriz são 'X', 'O' e '_',todos em maiúsculo, portanto se algum 
+  caracter diferente desses compor a matriz o método deverá lançar uma exceção (throw new Exception("Erro")).
+- O método verificaGanhador deverá retornar somente 3 caracteres: 'O', 'X' ou '_'. Respectivamente se 'O' 
+  ganhar, 'X' ganhar ou '_' caso ninguém ganhou.
+- Caso exista um resultado inválido do tipo dois ou mais ganhadores numa mesma matriz, o método deverá lançar uma
+  excessão (throw new Exception("Erro")).
+- Não precisa ser validado quantidades de 'X' ou 'O' na matriz pois os valores passados nela não serão 
+  necessariamente referentes a jogos reais.
+
+
+
+function (p_matriz:....): String;
+begin
+//
+//-> Teste se as posicoes todas tem coteudo valido
+//
+    if ((p_matriz [1,1] <> 'X') and (p_matriz [1,2] <> 'O') and (p_matriz [1,3] <> '_')) or
+       ((p_matriz [2,1] <> 'X') and (p_matriz [2,2] <> 'O') and (p_matriz [2,3] <> '_')) or
+       ((p_matriz [3,1] <> 'X') and (p_matriz [3,2] <> 'O') and (p_matriz [3,3] <> '_')) then
+    begin
+        Result := 'E'; // Resultado de erro que tem que ser tratado onde e chamada a funcao
+	Exit;
+    end;
+//
+//-> Posicao 2,2 nao precisa ser testada porque ja foi no 2,1 e no 1,2
+//   Posicao 2,3 nao precisa porque ja foi no 3,1
+//   Posicao 3,2 nao precisa porque ja foi no 2,1
+//   Posicao 3,3 nao precisa porque ja foi no 1,1 e no 1,3
+//
+    if (p_matriz [1,1] <> '_') and
+     //-> Testar considerando que o 1,1 tenha X ou O
+     (((p_matriz [1,1] = p_matriz [1,2]) and
+       (p_matriz [1,1] = p_matriz [1,3])) or
+      ((p_matriz [1,1] = p_matriz [2,2}) and
+       (p_matriz [1,1] = p_matriz [3,3])) or
+      ((p_matriz [1,1] = p_matriz [2,1}) and
+       (p_matriz [1,1] = p_matriz [3,1]))) then
+    begin
+        Result := p_matriz [1,1];
+	Exit;
+    end
+    else
+    begin
+        if (p_matriz [1,2] <> '_') and
+         //-> Testar considerando que o 1,2 tenha X ou O
+           (p_matriz [1,2] = p_matriz [2,2])
+           (p_matriz [1,2] = p_matriz [3,2]) then
+        begin
+            Result := p_matriz [1,2];
+            Exit;
+        end
+	else
+	begin
+            if (p_matriz [1,3] <> '_') and
+             //-> Testar considerando que o 3,1 tenha X ou O
+             (((p_matriz [1,3] = p_matriz [2,3]) and
+               (p_matriz [1,3] = p_matriz [3,3])) or
+              ((p_matriz [1,3] = p_matriz [2,2}) and
+               (p_matriz [1,3] = p_matriz [3,1]))) then
+            begin
+                Result := p_matriz [2,1];
+                Exit;
+            end
+	    else
+	    begin
+                if (p_matriz [2,1] <> '_') and
+                 //-> Testar considerando que o 2,1 tenha X ou O
+                   (p_matriz [2,1] = p_matriz [2,2])
+                   (p_matriz [2,1] = p_matriz [2,3]) then
+                begin
+                    Result := p_matriz [2,1];
+                    Exit;
+                end
+                else
+                begin
+                    if (p_matriz [3,1] <> '_') and
+                     //-> Testar considerando que o 3,1 tenha X ou O
+                       (p_matriz [3,1] = p_matriz [3,2])
+                       (p_matriz [3,1] = p_matriz [3,3]) then
+                    begin
+                        Result := p_matriz [2,1];
+                        Exit;
+                    end;
+                end;
+	    end;
+	end;
+    end;
+
+    Result := '_';
+end;
